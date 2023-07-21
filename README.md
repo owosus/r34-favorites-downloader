@@ -11,3 +11,5 @@ Extremely simple python script, that can download any users favorites from rule3
 - webdriver_manager (Python module)
 - wget (Python module)
 - Firefox Browser
+
+Hit me up on the issues page if you need help.
