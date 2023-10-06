@@ -12,4 +12,4 @@ Extremely simple python script, that can download any users favorites from rule3
 - wget (Python module)
 - Firefox Browser
 
-Hit me up on the Issues page or with a comment in Discussions if you need help.
+Hit me up on twitter if you need help :3
