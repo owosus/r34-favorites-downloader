@@ -57,6 +57,8 @@ print(f'\nFound images: {", ".join(found_ids)}\n')
 download_folder = f'./r34download_{time_ns()}'
 pathlib.Path(download_folder).mkdir(parents=True, exist_ok=True)   # create download folder
 
+num_errors = 0
+
 for post_id in found_ids:
 
     driver.get(f"https://rule34.xxx/index.php?page=post&s=view&id={post_id}")   # load page
@@ -86,12 +88,18 @@ for post_id in found_ids:
         print(f'\nDownloaded {image_link}\n')
 
     except selenium.common.exceptions.NoSuchElementException:
-        # image failed, so probably video. download video
-        vidsrc_elem = driver.find_element(By.XPATH, '/html/body/div[5]/div/div[2]/div[1]/div[2]/div[1]/div[3]/div/video/source') # locate video source element (if this doesn't work in the future, just put in the new xpath)
-        video_link = vidsrc_elem.get_attribute('src')
+        try:
+            # image failed, so probably video. download video
+            vidsrc_elem = driver.find_element(By.XPATH, '/html/body/div[5]/div/div[2]/div[1]/div[2]/div[1]/div[3]/div/video/source') # locate video source element (if this doesn't work in the future, just put in the new xpath)
+            video_link = vidsrc_elem.get_attribute('src')
 
-        wget.download(video_link, download_folder)              # download
-        print(f'\nDownloaded {video_link}\n')
-    
+            wget.download(video_link, download_folder)              # download
+            print(f'\nDownloaded {video_link}\n')
+        except selenium.common.exceptions.NoSuchElementException:
+            # neither image nor video found -> probably deleted :(
+            print(f'{post_id} could not be downloaded!\n')   
+            num_errors += 1 
 
 driver.quit()
+print(f'Finished with {num_errors} errors (Check output for more info).')
+input() # pause
